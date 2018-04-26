@@ -37,6 +37,18 @@ NUM_WORKERS = 4
 PIN_MEMORY = False
 
 ########################################################################################################################
+## DATA AUGMENTATION
+########################################################################################################################
+import Augmentor
+p = Augmentor.Pipeline()
+p.skew(probability=0.5, magnitude=1)
+# p.rotate_random_90(probability=0.5)
+p.zoom_random(probability=0.5, percentage_area=0.8)
+p.flip_left_right(probability=0.5)
+p.flip_top_bottom(probability=0.5)
+p.random_erasing(probability=0.5, rectangle_area=0.25)
+
+########################################################################################################################
 ## DATA LOADING
 ########################################################################################################################
 data_transforms = {
@@ -50,9 +62,15 @@ data_transforms = {
         # transforms.RandomSizedCrop(),
 
         # transforms.Resize(256),
+        
+        # transforms.RandomAffine([-90, 90], translate=[0.2, 0.2], scale=[0.5, 0.5], shear=[-10, 0, 10]),
 
+        
         transforms.Resize(256),
         transforms.CenterCrop(224),
+        
+        p.torch_transform(),
+        
 
         transforms.ToTensor(),
         transforms.Normalize(
@@ -68,9 +86,13 @@ data_transforms = {
         # transforms.RandomHorizontalFlip(),
         # transforms.RandomRotation(degrees=90),
         # transforms.RandomSizedCrop(),
-
+        
+        # transforms.RandomAffine([-90, 90], translate=[0.2, 0.2], scale=[0.5, 0.5], shear=[-10, 0, 10]),
+        
         transforms.Resize(256),
         transforms.CenterCrop(224),
+        
+        p.torch_transform(),
 
         transforms.ToTensor(),
         transforms.Normalize(
